@@ -1,5 +1,7 @@
 package com.yjy.service.imp;
 
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,10 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yjy.mapper.user_our.UserOurMapper;
 import com.yjy.model.PoliceModel;
+import com.yjy.model.SexModel;
 import com.yjy.model.StationModel;
 import com.yjy.service.UserDealService;
 import com.yjy.util.ExcelTemplateExporter;
@@ -26,6 +30,7 @@ import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
 import lombok.extern.slf4j.Slf4j;
 
 import com.yjy.config.InitConfig;
+import com.yjy.mapper.user_other.StationOtherMapper;
 import com.yjy.mapper.user_other.UserOtherMapper;
 @Service
 @Slf4j
@@ -35,13 +40,15 @@ public class UserDealServiceImp implements UserDealService{
 	@Autowired
 	private UserOtherMapper userOtherMapper;
 	@Autowired
+	private StationOtherMapper stationOtherMapper;
+	@Autowired
 	private InitConfig config;
 	@Autowired
 	private ExcelTemplateExporter excelTemplateExporter;
 	String sql=
 			"insert into T_POLICE_INFO"
-			+ "(ID,POLICE_CODE,NAME,STATIONID,GENDER,TELEPHONE,POLICE_POSITION,RADIO_ID) "
-			+ "values(#{id},#{policeCode},#{policeName},#{otherStationId},#{sex},#{phone},#{policePosition},#{radio},#{officeTel});"
+			+ "(ID,POLICE_CODE,NAME,STATIONID,GENDER,TELEPHONE,POLICE_POSITION,RADIO_ID,OFFICE_TEL) "
+			+ "values(#{id},#{policeCode},#{policeName},#{stationId},#{sex},#{phone},#{policePosition},#{radio},#{officeTel});"
 			+ "insert into T_PRIV_USER"
 			+ "(ID,USERNAME,LOGINNAME,PWD,STATE,POLICE_GUID)"
 			+ "values(#{userId},#{policeName},#{policeCode},#{policeCode},'1',#{id})";
@@ -171,16 +178,86 @@ public class UserDealServiceImp implements UserDealService{
 		
 	}
 
-	public void dealSex() {
-		Map<String, String> sexMap = config.getSexMap();
-		for(String key:sexMap.keySet()) {
-			String value = sexMap.get(key);
-			userOtherMapper.updateSex(key,value);
+	public void dealSex(List<SexModel> sexModelList) {
+		for(SexModel sexModel:sexModelList) {
+			userOtherMapper.updateSex(sexModel.getOthercode(),sexModel.getOurcode());
 		}
-		
-		
 	}
 
+
+	
+	@Override
+	public String stationDealForId(Integer type) {
+		//1.拿到全部的待转换文字
+		List<String> staionList=userOtherMapper.findForStationId(type);
+		if(CollectionUtils.isEmpty(staionList)) {
+			return "根据类型查询到对应的数据为空,请检查是否类型填错！";
+		}
+		//2.拿到我们orgcode转id映射
+		List<StationModel> ourStationList = userOurMapper.findAllStation();
+		Map<String,String> ourOrgcodeToIdMap=new HashMap<String,String>();
+		for(StationModel stationModel:ourStationList) {
+			ourOrgcodeToIdMap.put(stationModel.getOrgcode(), stationModel.getId());
+		}
+		//3.拿到他们的转换
+		Map<String, String> idToOrgcodeMap=new HashMap<String, String>();
+		Map<String, String> nameToOrgcodeMap=new HashMap<String, String>();
+		List<StationModel> findAllStation = stationOtherMapper.findAllStation();
+		for(StationModel stationModel:findAllStation) {
+			idToOrgcodeMap.put(stationModel.getId(), stationModel.getOrgcode());
+			nameToOrgcodeMap.put(stationModel.getStationName(), stationModel.getOrgcode());
+		}
+		//1是id转换，2是orgcode转换，3是部门名转换。
+		switch (type) {
+		case 1:
+			for(String s:staionList) {
+				if(!idToOrgcodeMap.containsKey(s)) {
+					throw new RuntimeException("在第三方的部门中找不到这个id："+s) ;
+				}
+				String orgcode = idToOrgcodeMap.get(s);
+				if(StringUtils.isEmpty(orgcode)) {
+					throw new RuntimeException("在第三方的部门没有orgcode:"+orgcode+",第三方名"+s);
+				}
+				String ourId = ourOrgcodeToIdMap.get(orgcode);
+				if(StringUtils.isEmpty(ourId)) {
+					throw new RuntimeException("我们部门中没有这个组织机构代码:"+orgcode+",第三方名"+s);
+				}
+				userOtherMapper.updateStationId(s,ourId,type);
+			}
+			return "转换成功";
+			
+		case 2:
+			for(String s:staionList) {
+				String ourId = ourOrgcodeToIdMap.get(s);
+				if(StringUtils.isEmpty(ourId)) {
+					throw new RuntimeException("我们部门中没有这个组织机构代码:"+s);
+				}
+				userOtherMapper.updateStationId(s,ourId,type);
+			}
+			return "转换成功";
+			
+		case 3:
+			for(String s:staionList) {
+				if(!nameToOrgcodeMap.containsKey(s)) {
+					throw new RuntimeException("在第三方的部门中找不到这个部门名："+s) ;
+				}
+				String orgcode = nameToOrgcodeMap.get(s);
+				if(StringUtils.isEmpty(orgcode)) {
+					throw new RuntimeException("在第三方的部门没有orgcode:"+orgcode+",第三方名"+s);
+				}
+				String ourId = ourOrgcodeToIdMap.get(orgcode);
+				if(StringUtils.isEmpty(ourId)) {
+					throw new RuntimeException("我们部门中没有这个组织机构代码:"+orgcode+",第三方名"+s);
+				}
+				userOtherMapper.updateStationId(s,ourId,type);
+			}
+			return "转换成功";
+		default:
+			break;
+		}
+		
+		return "您输入的类型有误";
+	}
 	
 }
 

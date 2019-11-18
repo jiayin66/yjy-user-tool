@@ -26,6 +26,9 @@ public class PoliceModel {
 	@Excel(name = "第三方厂家的部门id", orderNum = "4",width=25)
 	@ApiModelProperty("第三方厂家的部门id")
 	private String otherStationId;
+		
+	@ApiModelProperty("我们的部门id")
+	private String stationId;
 	
 	@Excel(name = "第三方厂家的部门name", orderNum = "5",width=25)
 	@ApiModelProperty("第三方厂家的部门名")

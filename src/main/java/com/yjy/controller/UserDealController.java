@@ -1,6 +1,7 @@
 package com.yjy.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -8,16 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yjy.model.PoliceModel;
+import com.yjy.model.SexModel;
 import com.yjy.service.UserDealService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/user/")
@@ -46,10 +50,15 @@ public class UserDealController {
 	public void getAddDifferenceExcel() {
 		dataDealService.deleteRepeatData();
 	}
-	@GetMapping("4/deal/sex")
+	@PostMapping("4/deal/sex")
 	@ApiOperation("（4）性别转换。配置文件填写性别转换eg：男->1")
-	public void dealSex() {
-		dataDealService.dealSex();
+	public void dealSex(@RequestBody List<SexModel> sexModelList) {
+		dataDealService.dealSex(sexModelList);
+	}
+	@GetMapping("5/station/change")
+	@ApiOperation("（5）部门的id转换（来源是部门id，部门的orgcode，部门的名字）")
+	public String stationDealForId(@ApiParam("1是id转换，2是orgcode转换，3是部门名转换") @RequestParam("type") Integer type) {
+		return dataDealService.stationDealForId(type);
 	}
 	
 	

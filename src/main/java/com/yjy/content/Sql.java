@@ -11,9 +11,10 @@ public class Sql {
 			"   SEX                  VARCHAR2(64),\r\n" + 
 			"   PHONE                VARCHAR2(64),\r\n" + 
 			"   OFFICE_TEL           VARCHAR2(64),\r\n" + 
+			"   STATION_ID           VARCHAR2(64),\r\n" + 
 			"   ORGCODE              VARCHAR2(100),\r\n" + 
 			"   STATIONID            VARCHAR2(64),\r\n" + 
-			"   STATIONNAME          VARCHAR2(200),\r\n" + 
+			"   STATIONNAME          VARCHAR2(300),\r\n" + 
 			"   POLICE_POSITION      VARCHAR2(64),\r\n" + 
 			"   RADIO_ID             VARCHAR2(64),\r\n" + 
 			"   constraint PK_YJY_USER primary key (ID)\r\n" + 
@@ -39,6 +40,9 @@ public class Sql {
 			"\r\n" + 
 			"comment on column YJY_USER.OFFICE_TEL is\r\n" + 
 			"'办公室电话';\r\n" + 
+			"\r\n" + 
+			"comment on column YJY_USER.STATION_ID is\r\n" + 
+			"'我们的部门id';\r\n" + 
 			"\r\n" + 
 			"comment on column YJY_USER.ORGCODE is\r\n" + 
 			"'【兼容】组织机构代码';\r\n" + 

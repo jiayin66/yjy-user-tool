@@ -23,4 +23,9 @@ public interface UserOtherMapper {
 
 	@Update("update YJY_USER t set t.SEX=#{value,jdbcType=VARCHAR} where t.SEX=#{key,jdbcType=VARCHAR}")
 	void updateSex(@Param("key") String key,@Param("value") String value);
+
+	List<String> findForStationId(@Param("type") Integer type);
+
+	void updateStationId(String s, String ourId,Integer type);
+
 }

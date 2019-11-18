@@ -39,6 +39,36 @@
 			 #{otherStationName,jdbcType=VARCHAR}
 				)
 	</insert>
+	
+	<select id="findForStationId" resultType="string" parameterType="integer">
+		select distinct
+			<if test="type==1">
+				STATIONID
+			</if>
+			<if test="type==2">
+				ORGCODE
+			</if>
+			<if test="type==3">
+				STATIONNAME
+			</if>
+		  from  YJY_USER
+	</select>
+	
+	<update id="updateStationId">
+		update YJY_USER t 
+			set t.STATION_ID=#{ourId,jdbcType=VARCHAR}
+		where 
+			<if test="type==1">
+				STATIONID
+			</if>
+			<if test="type==2">
+				ORGCODE
+			</if>
+			<if test="type==3">
+				STATIONNAME
+			</if>
+				=#{s,jdbcType=VARCHAR}
+	</update>
 </mapper>
 
 
