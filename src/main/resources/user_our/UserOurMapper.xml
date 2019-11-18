@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.yjy.mapper.user_our.UserOurMapper">
+	<resultMap type="com.yjy.model.StationModel" id="stationModel">
+		<id column="ID" property="id"  />
+		<result column="STATIONNAME" property="stationName"  />
+		<result column="PARENTID" property="parentId"  />
+		<result column="ORGCODE" property="orgcode"  />
+	</resultMap>
+	
+	<select id="findAllStation" resultMap="stationModel">
+		select * from T_POLICE_STATION_INFO s 
+	</select>
+	
+	
+	
+	<resultMap type="com.yjy.model.PoliceModel" id="policeModel">
+		<id column="ID" property="id"  />
+		<result column="NAME" property="policeName"  />
+		<result column="POLICE_CODE" property="policeCode"  />
+		<result column="STATIONID" property="otherStationId"  />
+	</resultMap>
+	
+	<select id="findAllPolice" resultMap="policeModel">
+		select * from T_POLICE_INFO 
+	</select>
+</mapper>
+
+
+
+
+
+
+
+

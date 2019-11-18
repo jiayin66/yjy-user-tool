@@ -1,0 +1,47 @@
+multipart: 
+  maxFileSize: 100Mb
+  maxRequestSize: 100Mb
+jp:
+  swagger:
+    basePackage: com.yjy.controller
+    apiInfo:
+      title: demo
+      description: demo
+      version: 1.0.0
+      email: 2864245248@qq.com
+server:
+  port: 10001
+#yjy: 
+#  user:
+#    driver-class-name: oracle.jdbc.driver.OracleDriver
+#    url: jdbc:oracle:thin:@//71.30.34.7:1521/kxc_hczz_users
+#    username: kxc_hczz_userpriv
+#    password: ABC_ps123
+
+logging:
+  level:
+    com.yjy: debug
+#spring:
+#  user-our:
+#    driver-class-name: oracle.jdbc.driver.OracleDriver
+#    url: jdbc:oracle:thin:@172.16.14.185:1521:ORCL
+#    username: HCZZUserPriv
+#    password: password
+#  user-other:
+#    driver-class-name: oracle.jdbc.driver.OracleDriver
+#    url: jdbc:oracle:thin:@172.16.14.185:1521:ORCL
+#    username: HCZZUserPriv
+#    password: password
+
+spring:
+  user-our:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@172.16.14.175:1521:ORCL
+    username: hczzinstruction1
+    password: password
+  user-other:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@172.16.14.175:1521:ORCL
+    username: hczzinstruction1
+    password: password
+

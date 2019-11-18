@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.yjy.mapper.user_other.StationOtherMapper">
+	<resultMap type="com.yjy.model.StationModel" id="stationModel">
+		<id column="ID" property="id"  />
+		<result column="PARENTID" property="parentId"  />
+		<result column="STATIONNAME" property="stationName"  />
+		<result column="ORGCODE" property="orgcode"  />
+		<result column="STATIONNUM" property="stationNum"  />
+		<result column="LONGITUDE" property="longitude"  />
+		<result column="LATITUDE" property="latitude"  />
+		<result column="TEL" property="tel"  />
+		<result column="ADDRESS" property="address"  />
+		<result column="RADIO_ID" property="radioId"  />
+	</resultMap>
+	
+	<select id="findAllStation" resultMap="stationModel">
+		select * from YJY_STATION 
+	</select>
+	
+	<insert id="insert" parameterType="com.yjy.model.StationModel">
+		insert into YJY_STATION(ID,PARENTID,STATIONNAME,ORGCODE,STATIONNUM,LONGITUDE,LATITUDE,TEL,ADDRESS,RADIO_ID)
+			 values(
+			 #{id,jdbcType=VARCHAR},
+			 #{parentId,jdbcType=VARCHAR},
+			 #{stationName,jdbcType=VARCHAR},
+			 #{orgcode,jdbcType=VARCHAR},
+			 #{stationNum,jdbcType=VARCHAR},
+			 #{longitude,jdbcType=VARCHAR},
+			 #{latitude,jdbcType=VARCHAR},
+			 #{tel,jdbcType=VARCHAR},
+			 #{address,jdbcType=VARCHAR},
+			 #{radioId,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="update" parameterType="com.yjy.model.StationModel">
+		update YJY_STATION set 
+		 	id=#{id,jdbcType=VARCHAR},
+			PARENTID= #{parentId,jdbcType=VARCHAR},
+			STATIONNAME= #{stationName,jdbcType=VARCHAR},
+			ORGCODE= #{orgcode,jdbcType=VARCHAR},
+			STATIONNUM= #{stationNum,jdbcType=VARCHAR},
+			LONGITUDE= #{longitude,jdbcType=VARCHAR},
+			LATITUDE= #{latitude,jdbcType=VARCHAR},
+			TEL= #{tel,jdbcType=VARCHAR},
+			ADDRESS= #{address,jdbcType=VARCHAR},
+			RADIO_ID= #{radioId,jdbcType=VARCHAR}
+	</update>
+</mapper>
+
+
+
+
+
+
+
+

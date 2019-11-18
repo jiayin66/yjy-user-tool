@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.yjy.mapper.user_other.UserOtherMapper">
+	
+	<resultMap type="com.yjy.model.PoliceModel" id="policeModel">
+		<id column="ID" property="id"  />
+		<result column="NAME" property="policeName"  />
+		<result column="CODE" property="policeCode"  />
+		<result column="ORGCODE" property="orgcode"  />
+		<result column="STATIONID" property="otherStationId"  />
+		<result column="SEX" property="sex"  />
+		<result column="PHONE" property="phone"  />
+		<result column="POLICE_POSITION" property="policePosition"  />
+		<result column="RADIO_ID" property="radio"  />
+		<result column="OFFICE_TEL" property="officeTel"  />
+		<result column="STATIONNAME" property="otherStationName"  />
+	</resultMap>
+	
+	<select id="findAllPolice" resultMap="policeModel">
+		select * from YJY_USER 
+	</select>
+	
+	<insert id="insert" parameterType="com.yjy.model.PoliceModel">
+		insert into YJY_USER(ID,NAME,CODE,ORGCODE,STATIONID,SEX,PHONE,POLICE_POSITION,OFFICE_TEL,RADIO_ID,STATIONNAME)
+			 values(
+			 #{id,jdbcType=VARCHAR},
+			 #{policeName,jdbcType=VARCHAR},
+			 #{policeCode,jdbcType=VARCHAR},
+			 #{orgcode,jdbcType=VARCHAR},
+			 #{otherStationId,jdbcType=VARCHAR},
+			 #{sex,jdbcType=VARCHAR},
+			 #{phone,jdbcType=VARCHAR},
+			 #{policePosition,jdbcType=VARCHAR},
+			 #{officeTel,jdbcType=VARCHAR},
+			 #{radio,jdbcType=VARCHAR},
+			 #{otherStationName,jdbcType=VARCHAR}
+				)
+	</insert>
+</mapper>
+
+
+
+
+
+
+
+
