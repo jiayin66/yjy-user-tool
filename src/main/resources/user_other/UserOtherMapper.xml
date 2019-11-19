@@ -51,6 +51,9 @@
 			<if test="type==3">
 				STATIONNAME
 			</if>
+			<if test="type==4">
+				STATIONID
+			</if>
 		  from  YJY_USER
 	</select>
 	
@@ -66,6 +69,9 @@
 			</if>
 			<if test="type==3">
 				STATIONNAME
+			</if>
+			<if test="type==4">
+				STATIONID
 			</if>
 				=#{s,jdbcType=VARCHAR}
 	</update>

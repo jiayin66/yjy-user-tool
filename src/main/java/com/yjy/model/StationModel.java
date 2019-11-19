@@ -2,11 +2,11 @@ package com.yjy.model;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class StationModel {
 	@Excel(name = "id", orderNum = "0")
 	@ApiModelProperty("id")

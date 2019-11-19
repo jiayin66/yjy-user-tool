@@ -56,8 +56,8 @@ public class UserDealController {
 		dataDealService.dealSex(sexModelList);
 	}
 	@GetMapping("5/station/change")
-	@ApiOperation("（5）部门的id转换（来源是部门id，部门的orgcode，部门的名字）")
-	public String stationDealForId(@ApiParam("1是id转换，2是orgcode转换，3是部门名转换") @RequestParam("type") Integer type) {
+	@ApiOperation("（5）警员的部门id（要么警员有orgcode这个再部门中有，要么存的就是我们的部门id）")
+	public String stationDealForId(@ApiParam("1是厂家给他们的id我们数据库存自己id，2是厂家给orgcode，3是厂家给部门名，4是厂家给他们id同时我们数据库存他们的id") @RequestParam("type") Integer type) {
 		return dataDealService.stationDealForId(type);
 	}
 	

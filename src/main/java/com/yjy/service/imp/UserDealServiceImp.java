@@ -188,15 +188,24 @@ public class UserDealServiceImp implements UserDealService{
 	
 	@Override
 	public String stationDealForId(Integer type) {
-		//1.拿到全部的待转换文字
+		//1.拿到全部的待转换部门信息
 		List<String> staionList=userOtherMapper.findForStationId(type);
 		if(CollectionUtils.isEmpty(staionList)) {
 			return "根据类型查询到对应的数据为空,请检查是否类型填错！";
 		}
-		//2.拿到我们orgcode转id映射
+		//2.拿到我们部门的映射关系
 		List<StationModel> ourStationList = userOurMapper.findAllStation();
+		//用来转换4类型
+		Map<String,String> ourStaListMap=new HashMap<String,String>();
+		//用来转换123类型（orgcode作为媒介）
 		Map<String,String> ourOrgcodeToIdMap=new HashMap<String,String>();
 		for(StationModel stationModel:ourStationList) {
+			ourStaListMap.put(stationModel.getId(), stationModel.getId());
+			String orgcode = stationModel.getOrgcode();
+			if(StringUtils.isEmpty(orgcode)) {
+				//我们的orgcode为空就没法找到数据，暂时无需。
+				continue;
+			}
 			ourOrgcodeToIdMap.put(stationModel.getOrgcode(), stationModel.getId());
 		}
 		//3.拿到他们的转换
@@ -204,23 +213,31 @@ public class UserDealServiceImp implements UserDealService{
 		Map<String, String> nameToOrgcodeMap=new HashMap<String, String>();
 		List<StationModel> findAllStation = stationOtherMapper.findAllStation();
 		for(StationModel stationModel:findAllStation) {
-			idToOrgcodeMap.put(stationModel.getId(), stationModel.getOrgcode());
-			nameToOrgcodeMap.put(stationModel.getStationName(), stationModel.getOrgcode());
+			String orgcode = stationModel.getOrgcode();
+			if(StringUtils.isEmpty(orgcode)) {
+				//他们的orgcode为空，暂时无法通过这种方式转换
+				log.error("第三方厂家的该部门没有orgcode，暂时无法通过orgcode来转换：{}",stationModel.toString());
+				continue;
+			}
+			idToOrgcodeMap.put(stationModel.getId(),orgcode );
+			nameToOrgcodeMap.put(stationModel.getStationName(), orgcode);
 		}
-		//1是id转换，2是orgcode转换，3是部门名转换。
+		//1是厂家给他们的id我们数据库存自己id（orgcode），2是厂家给orgcode（orgcode），3是厂家给部门名（orgcode），4是厂家给他们id同时我们数据库存他们的id
 		switch (type) {
 		case 1:
 			for(String s:staionList) {
 				if(!idToOrgcodeMap.containsKey(s)) {
-					throw new RuntimeException("在第三方的部门中找不到这个id："+s) ;
+					//说明找不到映射，或者部门的orgcode为空
+					log.info("警员的部门id找不到厂家提供的orgcode，或者部门的orgcode为空");
+					continue;
 				}
 				String orgcode = idToOrgcodeMap.get(s);
 				if(StringUtils.isEmpty(orgcode)) {
-					throw new RuntimeException("在第三方的部门没有orgcode:"+orgcode+",第三方名"+s);
+					throw new RuntimeException("前面已经去掉了空的id-orgcode，这里如果还是有问题有问题说明异常");
 				}
 				String ourId = ourOrgcodeToIdMap.get(orgcode);
 				if(StringUtils.isEmpty(ourId)) {
-					throw new RuntimeException("我们部门中没有这个组织机构代码:"+orgcode+",第三方名"+s);
+					log.error("我们部门中没有这个组织机构代码导致映射失败:"+orgcode+",第三方名"+s);
 				}
 				userOtherMapper.updateStationId(s,ourId,type);
 			}
@@ -251,6 +268,14 @@ public class UserDealServiceImp implements UserDealService{
 				}
 				userOtherMapper.updateStationId(s,ourId,type);
 			}
+			return "转换成功";
+		case 4:
+			for(String s:staionList) {
+				if(ourStaListMap.containsKey(s)) {
+					userOtherMapper.updateStationId(s,s,type);
+				}
+			}
+			
 			return "转换成功";
 		default:
 			break;

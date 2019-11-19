@@ -26,6 +26,6 @@ public interface UserOtherMapper {
 
 	List<String> findForStationId(@Param("type") Integer type);
 
-	void updateStationId(String s, String ourId,Integer type);
+	void updateStationId(@Param("s") String s,@Param("ourId") String ourId,@Param("type") Integer type);
 
 }

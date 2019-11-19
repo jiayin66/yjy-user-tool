@@ -11,7 +11,7 @@ jp:
       email: 2864245248@qq.com
 server:
   port: 10001
-#yjy: 
+
 #  user:
 #    driver-class-name: oracle.jdbc.driver.OracleDriver
 #    url: jdbc:oracle:thin:@//71.30.34.7:1521/kxc_hczz_users
