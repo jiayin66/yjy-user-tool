@@ -22,10 +22,28 @@
 		<result column="NAME" property="policeName"  />
 		<result column="POLICE_CODE" property="policeCode"  />
 		<result column="STATIONID" property="otherStationId"  />
+		<result column="TELEPHONE" property="phone"  />
 	</resultMap>
 	
 	<select id="findAllPolice" resultMap="policeModel">
 		select * from T_POLICE_INFO 
+	</select>
+	
+	<update id="update" parameterType="com.yjy.model.PoliceModel">
+		update T_POLICE_INFO t set
+		 t.TELEPHONE=#{phone,jdbcType=VARCHAR},
+		 t.POLICE_CODE=#{policeCode,jdbcType=VARCHAR},
+		 t.GENDER=#{sex,jdbcType=VARCHAR},
+		 t.STATIONID=#{stationId,jdbcType=VARCHAR},
+		 t.NAME=#{policeName,jdbcType=VARCHAR}
+		 
+		 
+			where t.id=#{id,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="findByCodeAndName" resultMap="policeModel">
+		select * from T_POLICE_INFO t where t.NAME=#{policeName,jdbcType=VARCHAR} 
+		and t.POLICE_CODE like '%${subcode}'
 	</select>
 </mapper>
 

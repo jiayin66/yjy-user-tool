@@ -28,4 +28,10 @@ public interface UserOtherMapper {
 
 	void updateStationId(@Param("s") String s,@Param("ourId") String ourId,@Param("type") Integer type);
 
+	List<PoliceModel> findByStationId(String id);
+
+	List<PoliceModel> findByCodeAndName(@Param("subcode") String subcode, @Param("policeName") String policeName);
+
+
+	
 }

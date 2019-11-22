@@ -45,7 +45,7 @@ public class UserDealServiceImp implements UserDealService{
 	private InitConfig config;
 	@Autowired
 	private ExcelTemplateExporter excelTemplateExporter;
-	String sql=
+	public static String sql=
 			"insert into T_POLICE_INFO"
 			+ "(ID,POLICE_CODE,NAME,STATIONID,GENDER,TELEPHONE,POLICE_POSITION,RADIO_ID,OFFICE_TEL) "
 			+ "values(#{id},#{policeCode},#{policeName},#{stationId},#{sex},#{phone},#{policePosition},#{radio},#{officeTel});"

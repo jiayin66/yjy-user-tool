@@ -11,6 +11,7 @@
 		<result column="CODE" property="policeCode"  />
 		<result column="ORGCODE" property="orgcode"  />
 		<result column="STATIONID" property="otherStationId"  />
+		<result column="STATION_ID" property="stationId"  />
 		<result column="SEX" property="sex"  />
 		<result column="PHONE" property="phone"  />
 		<result column="POLICE_POSITION" property="policePosition"  />
@@ -21,6 +22,9 @@
 	
 	<select id="findAllPolice" resultMap="policeModel">
 		select * from YJY_USER 
+	</select>
+	<select id="findByStationId" resultMap="policeModel">
+		select * from YJY_USER t where t.stationid= #{id,jdbcType=VARCHAR}
 	</select>
 	
 	<insert id="insert" parameterType="com.yjy.model.PoliceModel">
@@ -75,6 +79,11 @@
 			</if>
 				=#{s,jdbcType=VARCHAR}
 	</update>
+	
+	<select id="findByCodeAndName" resultMap="policeModel">
+		select * from YJY_USER t where t.NAME=#{policeName,jdbcType=VARCHAR} 
+		and t.CODE like '%${subcode}'
+	</select>
 </mapper>
 
 
